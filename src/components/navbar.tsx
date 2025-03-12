@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { createClient } from "../../supabase/server";
-import { Button } from "./ui/button";
-import { Bot, ShoppingCart, UserCircle } from "lucide-react";
+import { Bot, ShoppingCart } from "lucide-react";
 import UserProfile from "./user-profile";
+import { ThemeSwitcher } from "./theme-switcher";
+import { MotionNav } from "./motion-wrapper";
 
 export default async function Navbar() {
   const supabase = createClient();
@@ -12,7 +13,12 @@ export default async function Navbar() {
   } = await (await supabase).auth.getUser();
 
   return (
-    <nav className="w-full border-b border-gray-800 bg-gray-900 py-4 sticky top-0 z-50">
+    <MotionNav
+      className="w-full border-b border-gray-800 bg-gray-900 dark:bg-gray-900 py-4 sticky top-0 z-50"
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    >
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link
           href="/"
@@ -25,6 +31,8 @@ export default async function Navbar() {
           </span>
         </Link>
         <div className="flex gap-4 items-center">
+          <ThemeSwitcher />
+
           {user ? (
             <>
               <Link
@@ -34,7 +42,7 @@ export default async function Navbar() {
                 Browse Agents
               </Link>
               <Link
-                href="#"
+                href="/dashboard/cart"
                 className="relative px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
               >
                 <ShoppingCart className="h-5 w-5" />
@@ -45,23 +53,15 @@ export default async function Navbar() {
               <UserProfile />
             </>
           ) : (
-            <>
-              <Link
-                href="/sign-in"
-                className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/sign-up"
-                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-cyan-500 to-purple-600 rounded-md hover:opacity-90 transition-all"
-              >
-                Sign Up
-              </Link>
-            </>
+            <Link
+              href="/sign-up"
+              className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-cyan-500 to-purple-600 rounded-md hover:opacity-90 transition-all"
+            >
+              Get Started
+            </Link>
           )}
         </div>
       </div>
-    </nav>
+    </MotionNav>
   );
 }

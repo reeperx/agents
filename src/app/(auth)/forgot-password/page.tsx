@@ -5,7 +5,8 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { SmtpMessage } from "../smtp-message";
 import { forgotPasswordAction } from "@/app/actions";
-import Navbar from "@/components/navbar";
+import AuthLayout from "@/components/auth-layout";
+import { ForgotPasswordIllustration } from "@/components/auth-illustrations";
 
 export default async function ForgotPassword(props: {
   searchParams: Promise<Message>;
@@ -21,53 +22,53 @@ export default async function ForgotPassword(props: {
   }
 
   return (
-    <>
-      <Navbar />
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8">
-        <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-sm">
-          <form className="flex flex-col space-y-6">
-            <div className="space-y-2 text-center">
-              <h1 className="text-3xl font-semibold tracking-tight">Reset Password</h1>
-              <p className="text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <Link
-                  className="text-primary font-medium hover:underline transition-all"
-                  href="/sign-in"
-                >
-                  Sign in
-                </Link>
-              </p>
+    <AuthLayout
+      title="Reset Password"
+      subtitle={
+        <>
+          Remember your password?{" "}
+          <Link
+            className="text-cyan-400 font-medium hover:underline transition-all"
+            href="/sign-in"
+          >
+            Sign in
+          </Link>
+        </>
+      }
+      illustration={<ForgotPasswordIllustration />}
+    >
+      <form className="flex flex-col space-y-6">
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-medium">
+              Email
+            </Label>
+            <div className="animate-fadeIn animate-delay-100">
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+                className="w-full bg-gray-700 border-gray-600"
+              />
             </div>
-
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  required
-                  className="w-full"
-                />
-              </div>
-            </div>
-
-            <SubmitButton
-              formAction={forgotPasswordAction}
-              pendingText="Sending reset link..."
-              className="w-full"
-            >
-              Reset Password
-            </SubmitButton>
-
-            <FormMessage message={searchParams} />
-          </form>
+          </div>
         </div>
+
+        <div className="animate-fadeIn animate-delay-200">
+          <SubmitButton
+            formAction={forgotPasswordAction}
+            pendingText="Sending reset link..."
+            className="w-full bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90"
+          >
+            Reset Password
+          </SubmitButton>
+        </div>
+
+        <FormMessage message={searchParams} />
         <SmtpMessage />
-      </div>
-    </>
+      </form>
+    </AuthLayout>
   );
 }
